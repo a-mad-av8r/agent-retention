@@ -24,6 +24,6 @@ This repo is part of **Agent Cortex** — an open-source multi-agent collaborati
 
 ## Author
 
-**Amad Malik** — CTO at Atos, Chief AI Officer at Adaptech AI.
+**Amad Malik** — Founder + CEO/CTO of Adaptech AI Ltd, building EnGenAI ([engenai.app](https://engenai.app)).
 
 [LinkedIn](https://www.linkedin.com/in/amadmalik/) · [GitHub](https://github.com/a-mad-av8r)
