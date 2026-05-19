@@ -1,0 +1,14 @@
+project: local
+memory_types:
+  decision:
+    hot_days: 14
+    warm_days: 90
+    archive_after_days: 365
+  lesson:
+    hot_days: 30
+    warm_days: 180
+    archive_after_days: 365
+  message:
+    hot_days: 7
+    warm_days: 30
+    archive_after_days: 60

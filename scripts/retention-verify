@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=scripts/_retention_lib.sh
+source "$SCRIPT_DIR/_retention_lib.sh"
+require_db
+
+sqlite3 "$RETENTION_DB" "SELECT 1 FROM memories LIMIT 1;" >/dev/null
+sqlite3 "$RETENTION_DB" "SELECT 1 FROM archive_memories LIMIT 1;" >/dev/null
+sqlite3 "$RETENTION_DB" "SELECT 1 FROM retention_config LIMIT 1;" >/dev/null
+echo "OK retention tables are present"

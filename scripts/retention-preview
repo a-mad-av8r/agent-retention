@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=scripts/_retention_lib.sh
+source "$SCRIPT_DIR/_retention_lib.sh"
+require_db
+
+older_than="30d"
+if [[ "${1:-}" == "--older-than" ]]; then
+  older_than="${2:-30d}"
+fi
+days="$(days_from_arg "$older_than")"
+
+sqlite3 -header -column "$RETENTION_DB" "
+SELECT id, memory_type, status, created_at, summary
+FROM memories
+WHERE project='$(sql_escape "$RETENTION_PROJECT")'
+  AND created_at < datetime('now', '-$days days')
+ORDER BY created_at ASC;
+"

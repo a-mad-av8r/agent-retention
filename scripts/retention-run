@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=scripts/_retention_lib.sh
+source "$SCRIPT_DIR/_retention_lib.sh"
+require_db
+
+dry_run="false"
+older_than="30d"
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --dry-run) dry_run="true"; shift ;;
+    --older-than) older_than="${2:-30d}"; shift 2 ;;
+    *) echo "Unknown argument: $1" >&2; exit 1 ;;
+  esac
+done
+
+days="$(days_from_arg "$older_than")"
+if [[ "$dry_run" == "true" ]]; then
+  echo "DRY RUN: memories older than $days days that would be archived"
+  "$SCRIPT_DIR/retention-preview" --older-than "${days}d"
+  exit 0
+fi
+
+sqlite3 "$RETENTION_DB" "
+INSERT OR IGNORE INTO archive_memories(id, project, memory_type, status, summary, created_at, last_accessed_at)
+SELECT id, project, memory_type, 'archived', summary, created_at, last_accessed_at
+FROM memories
+WHERE project='$(sql_escape "$RETENTION_PROJECT")'
+  AND created_at < datetime('now', '-$days days');
+DELETE FROM memories
+WHERE project='$(sql_escape "$RETENTION_PROJECT")'
+  AND created_at < datetime('now', '-$days days');
+"
+echo "archival run complete"

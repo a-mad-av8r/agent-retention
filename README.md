@@ -1,29 +1,56 @@
 # agent-retention
 
-**3-tier data lifecycle management — Redis hot → pgvector warm → SQL archive**
+Retention and archival for agent memory.
 
-> 🔜 **Coming Soon** — Part of the [Agent Cortex](https://github.com/a-mad-av8r/agent-cortex) series.
+Agent memory fails in two ways: it forgets too much, or it remembers everything
+as equally active. This repo demonstrates a small lifecycle model: hot, warm,
+cold, archived, still findable.
 
----
+## Quick Start
 
-## Piece 5 of 7
+```bash
+git clone https://github.com/a-mad-av8r/agent-retention
+cd agent-retention
+cp .env.example .env
+./setup.sh
+./scripts/retention-preview --older-than 30d
+./scripts/retention-run --dry-run
+./scripts/retention-verify
+```
 
-This repo is part of **Agent Cortex** — an open-source multi-agent collaboration system built for real production use.
+The demo seeds a few memory records so the preview command has something to
+show immediately.
 
-| Piece | Repo | Status |
-|-------|------|--------|
-| 1. Memory | [agent-memory](https://github.com/a-mad-av8r/agent-memory) | ✅ **Live** |
-| 2. Telepathic Link | [agent-telepathy](https://github.com/a-mad-av8r/agent-telepathy) | 🔜 Coming Soon |
-| 3. Handoffs | [agent-handoffs](https://github.com/a-mad-av8r/agent-handoffs) | 🔜 Coming Soon |
-| 4. Roles | [agent-roles](https://github.com/a-mad-av8r/agent-roles) | 🔜 Coming Soon |
-| 5. Retention | [agent-retention](https://github.com/a-mad-av8r/agent-retention) | 🔜 Coming Soon |
-| 6. Multi-Tool | [agent-multimodel](https://github.com/a-mad-av8r/agent-multimodel) | 🔜 Coming Soon |
-| 7. Full Cortex | [agent-cortex](https://github.com/a-mad-av8r/agent-cortex) | 🔜 Coming Soon |
+## What Is Included
 
-⭐ **Start with [Agent Memory](https://github.com/a-mad-av8r/agent-memory)** — it's live and ready to use.
+- `schema.sql` with active memory, archive memory, and retention config tables.
+- `scripts/retention-preview`, `scripts/retention-run`,
+  `scripts/retention-verify`, `scripts/retention-report`, and
+  `scripts/retention-diagnose`.
+- Example policy and status-aware archival notes.
+- Lifecycle and archive schema docs.
+
+## What Is Deliberately Out
+
+- Production workers and schedulers.
+- Legal hold, customer data policy, and billing-linked retention.
+- EnGenAI internal retention policy.
+- Full multimodal artifact lifecycle.
+
+## Series Map
+
+| Part | Repo | Focus |
+| --- | --- | --- |
+| 1 | [agent-cortex](https://github.com/a-mad-av8r/agent-cortex) | Operating memory core |
+| 2 | [agent-telepathy](https://github.com/a-mad-av8r/agent-telepathy) | Event awareness |
+| 3 | [agent-handoffs](https://github.com/a-mad-av8r/agent-handoffs) | Structured transfer |
+| 4 | [agent-roles](https://github.com/a-mad-av8r/agent-roles) | Role boundaries |
+| 5 | [agent-retention](https://github.com/a-mad-av8r/agent-retention) | Memory lifecycle |
+| 6 | [agent-multimodel](https://github.com/a-mad-av8r/agent-multimodel) | Shared protocol across tools |
 
 ## Author
 
-**Amad Malik** — Founder + CEO/CTO of Adaptech AI Ltd, building EnGenAI ([engenai.app](https://engenai.app)).
+Amad Malik - Founder and CEO/CTO of Adaptech AI Ltd, building EnGenAI
+([engenai.app](https://engenai.app)).
 
-[LinkedIn](https://www.linkedin.com/in/amadmalik/) · [GitHub](https://github.com/a-mad-av8r)
+[LinkedIn](https://www.linkedin.com/in/amadmalik/) | [GitHub](https://github.com/a-mad-av8r)

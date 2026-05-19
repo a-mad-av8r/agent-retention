@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=scripts/_retention_lib.sh
+source "$SCRIPT_DIR/_retention_lib.sh"
+require_db
+
+sqlite3 -header -column "$RETENTION_DB" "
+SELECT 'active' AS bucket, memory_type, count(*) AS records FROM memories GROUP BY memory_type
+UNION ALL
+SELECT 'archive' AS bucket, memory_type, count(*) AS records FROM archive_memories GROUP BY memory_type
+ORDER BY bucket, memory_type;
+"
